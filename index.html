@@ -24,6 +24,8 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .brand span { color: var(--yel); }
 .tabs { display: flex; background: rgba(0,0,0,.25); border-radius: 99px; padding: 5px; gap: 4px; }
 .tabs button { border-radius: 99px; padding: .45em 1.1em; color: #fff; font-size: clamp(14px, 1.5vw, 22px); font-weight: 900; white-space: nowrap; transition: background .2s; }
+.ic { width: 1em; height: 1em; vertical-align: -.14em; margin-right: .25em; }
+.brand .hz { width: 1.6em; }
 .tabs button[aria-pressed="true"] { background: var(--yel); color: var(--ink); box-shadow: 0 3px 0 #C99A00; }
 
 /* ---------- panel ---------- */
@@ -54,7 +56,8 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 3cqi; }
 .speed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2cqi; background: #EEF3FF; border-radius: 14px; padding: 4px; }
 .speed button { border-radius: 11px; padding: .2em 0; font-size: min(8cqi, 3.6vh); font-weight: 900; }
-.speed button[aria-pressed="false"] { filter: grayscale(1); opacity: .55; }
+.speed button[aria-pressed="false"] { opacity: .5; }
+.speed svg { height: .8em; width: auto; display: block; margin: auto; fill: currentColor; }
 .speed button[aria-pressed="true"] { background: var(--sky); color: #fff; box-shadow: 0 3px 0 var(--sky2); }
 .count { display: flex; align-items: center; justify-content: space-between; background: var(--ink); color: #fff; border-radius: 16px; padding: min(2.5cqi, 1.2vh) 5cqi; }
 .count span { font-size: clamp(13px, 4.8cqi, 18px); color: #AEB9E8; }
@@ -62,8 +65,10 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .podium { display: flex; align-items: center; gap: .5em; background: rgba(0,0,0,.25); border-radius: 99px; padding: 5px 16px 5px 18px; color: #fff; font-size: clamp(14px, 1.5vw, 22px); }
 .podium > b { color: var(--yel); letter-spacing: .04em; white-space: nowrap; }
 .podium ol { list-style: none; padding: 0; display: flex; gap: .5em; }
-.podium li { display: flex; align-items: center; gap: .2em; }
-.podium .chip { width: 1.8em; height: 1.8em; border-radius: 50%; display: grid; place-items: center; background: var(--c, #ddd); color: var(--ink); border: 2.5px solid #fff; font-weight: 900; }
+.podium li { display: flex; align-items: center; gap: .2em; animation: pop .35s cubic-bezier(.2,1.8,.4,1); }
+.podium .chip { width: 1.8em; height: 1.8em; border-radius: 50%; display: grid; place-items: center; background: var(--c, #ddd); color: var(--ink); border: 3px solid var(--m); font-weight: 900; position: relative; }
+.podium .chip::after { content: attr(data-r); position: absolute; right: -.45em; bottom: -.3em; background: var(--m); color: var(--ink); border-radius: 99px; font-size: .5em; padding: .05em .35em; }
+.podium li:first-child .chip { width: 2.1em; height: 2.1em; }
 .only-mil { display: none; }
 .mil .only-mil { display: grid; } .mil .only-race { display: none; }
 
@@ -84,10 +89,39 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .fill { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: linear-gradient(var(--c), color-mix(in srgb, var(--c) 70%, #000)); opacity: .5; transition: height .25s ease-out; border-radius: 10px 10px 0 0; }
 .fill { display: none; }
 .mil .fill { display: block; opacity: .9; }
-.horse { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); font-size: min(6.4cqh, 5.4cqw); line-height: 1; z-index: 2;
+.horse { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: min(7.2cqw, 13cqh); z-index: 2;
   transition: bottom .25s cubic-bezier(.3,1.5,.5,1); filter: drop-shadow(0 4px 2px rgba(0,0,0,.35)); }
-.horse .crown { position: absolute; left: 50%; top: -.62em; transform: translateX(-50%) scale(0); font-size: .62em; transition: transform .25s cubic-bezier(.2,1.8,.4,1); }
-.lane.leader .horse .crown { transform: translateX(-50%) scale(1); }
+.hz { display: block; width: 100%; height: auto; overflow: visible; }
+.hz .bd { animation: breathe 2.4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hz .tl { transform-box: fill-box; transform-origin: 90% 10%; animation: tail 2.4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hz .hd { transform-box: fill-box; transform-origin: 10% 60%; animation: nod 2.4s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.hz .lg { transform-box: fill-box; transform-origin: 50% 0; }
+@keyframes breathe { 0%,100% { transform: none; } 50% { transform: translateY(1.2px); } }
+@keyframes tail { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(8deg); } }
+@keyframes nod { 0%,100% { transform: none; } 50% { transform: rotate(4deg); } }
+/* galope */
+.gal .bd, .lane.go .hz .bd, .running .hz .bd { animation: bob .3s linear infinite; }
+.gal .hd, .lane.go .hz .hd, .running .hz .hd { animation: nod .3s ease-in-out infinite; }
+.gal .tl, .lane.go .hz .tl, .running .hz .tl { animation: tailr .3s ease-in-out infinite; }
+.gal .lf, .lane.go .hz .lf, .running .hz .lf { animation: legA .3s linear infinite; }
+.gal .lb, .lane.go .hz .lb, .running .hz .lb { animation: legB .3s linear infinite; }
+.gal .lf2, .lane.go .hz .lf2, .running .hz .lf2 { animation: legA .3s linear infinite -.06s; }
+.gal .lb2, .lane.go .hz .lb2, .running .hz .lb2 { animation: legB .3s linear infinite -.06s; }
+@keyframes bob { 0%,100% { transform: translateY(0) rotate(0); } 25% { transform: translateY(-5px) rotate(-3deg); } 75% { transform: translateY(-2px) rotate(2deg); } }
+@keyframes tailr { 0%,100% { transform: rotate(-14deg); } 50% { transform: rotate(10deg); } }
+@keyframes legA { 0%,100% { transform: rotate(-38deg); } 50% { transform: rotate(32deg); } }
+@keyframes legB { 0%,100% { transform: rotate(34deg); } 50% { transform: rotate(-30deg); } }
+.dust { position: absolute; left: -10%; bottom: -8%; width: 70%; height: 40%; pointer-events: none; opacity: 0; }
+.dust i { position: absolute; bottom: 0; width: 40%; aspect-ratio: 1; border-radius: 50%; background: rgba(255,240,215,.85); }
+.dust i:nth-child(1) { left: 0; } .dust i:nth-child(2) { left: 30%; width: 30%; } .dust i:nth-child(3) { left: 55%; width: 25%; }
+.lane.go .dust, .running .dust { opacity: 1; }
+.lane.go .dust i, .running .dust i { animation: puff .45s ease-out infinite; }
+.dust i:nth-child(2) { animation-delay: -.15s !important; } .dust i:nth-child(3) { animation-delay: -.3s !important; }
+@keyframes puff { from { transform: scale(.3) translate(0, 0); opacity: .9; } to { transform: scale(1.3) translate(-30%, 40%); opacity: 0; } }
+.horse .crown { position: absolute; left: 62%; top: -34%; width: 34%; transform: translateX(-50%) scale(0); transition: transform .25s cubic-bezier(.2,1.8,.4,1); }
+.crown svg { display: block; width: 100%; filter: drop-shadow(0 2px 0 rgba(0,0,0,.3)); }
+.lane.leader .horse .crown { transform: translateX(-50%) scale(1); animation: crown 1.2s ease-in-out infinite; }
+@keyframes crown { 0%,100% { translate: 0 0; rotate: -8deg; } 50% { translate: 0 -12%; rotate: 8deg; } }
 .lane.leader .run { box-shadow: inset 0 0 0 5px var(--yel); }
 .lane.leader .badge { box-shadow: 0 0 0 4px var(--yel), 0 4px 0 rgba(0,0,0,.25); }
 .lane.hit .run { animation: hit .35s; }
@@ -97,16 +131,15 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .mil .cnt { display: block; }
 .badge { justify-self: center; width: min(100%, 2.7em); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; position: relative;
   background: var(--c); color: var(--ink); border: 3.5px solid #fff; font-size: clamp(14px, 1.7vw, 26px); font-weight: 900; box-shadow: 0 4px 0 rgba(0,0,0,.25); padding: 0; }
-.badge.bet::after { content: "⭐"; position: absolute; top: -.7em; right: -.55em; font-size: .75em; }
-.badge .w { position: absolute; bottom: -1.05em; left: 50%; transform: translateX(-50%); font-size: .55em; color: #fff; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
-.lane:has(.w:not(:empty)) { padding-bottom: .9em; }
+.badge.bet::after { content: ""; position: absolute; top: -.45em; right: -.45em; width: .95em; height: .95em; background: var(--yel);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: crown 1.2s ease-in-out infinite; }
 
 /* ---------- ganador ---------- */
 .modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(6,16,60,.55); backdrop-filter: blur(3px); padding: 16px; }
 .modal[hidden] { display: none; }
 .win { position: relative; background: #fff; border-radius: 34px; padding: clamp(18px, 4vh, 40px) clamp(28px, 6vw, 80px); text-align: center; border: 8px solid var(--yel);
   box-shadow: 0 14px 0 rgba(0,0,0,.18), 0 30px 80px rgba(0,0,0,.45); animation: zoom .5s cubic-bezier(.2,1.6,.4,1); }
-.win .h { font-size: clamp(56px, 11vw, 150px); line-height: 1; }
+.win .h { width: clamp(130px, 18vw, 240px); margin: 0 auto; }
 .win .t { font-size: clamp(30px, 5.5vw, 76px); font-weight: 900; color: var(--sky); line-height: 1; margin-top: .1em; }
 .win .s { font-size: clamp(16px, 2.2vw, 28px); color: #6B7AB0; margin-top: .4em; }
 .win .btn { margin-top: clamp(14px, 3vh, 28px); padding: .35em 1.4em; font-size: clamp(20px, 3vw, 34px); width: auto; }
@@ -126,17 +159,17 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
   .app { grid-template-rows: 1fr; }
   .podium { display: none; }
 }
-@media (prefers-reduced-motion: reduce) { .horse, .fill { transition: none; } .die.shake, .win, .sum.pop { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .hz *, .dust i, .crown { animation: none !important; } .horse, .fill { transition: none; } .die.shake, .win, .sum.pop { animation: none; } }
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <header class="top">
-    <div class="brand">🏇 Carrera de <span>caballos</span></div>
+    <div class="brand"><span id="brandH"></span> Carrera de <span>caballos</span></div>
     <div class="podium"><b>VA GANANDO</b><ol id="podium"></ol></div>
     <div class="tabs" id="tabs">
-      <button data-m="race" aria-pressed="true">🏁 Carrera</button>
-      <button data-m="mil" aria-pressed="false">🎲 1.000 lanzamientos</button>
+      <button data-m="race" aria-pressed="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 2v20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M5 3h16v11H5z" fill="currentColor" opacity=".25"/><path d="M5 3h4v4H5zM13 3h4v4h-4zM9 7h4v3.5H9zM17 7h4v3.5h-4zM5 10.5h4V14H5zM13 10.5h4V14h-4z" fill="currentColor"/></svg>Carrera</button>
+      <button data-m="mil" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="8" cy="8" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>1.000 lanzamientos</button>
     </div>
   </header>
 
@@ -144,13 +177,13 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     <div class="dicebox">
       <div class="die r" id="d1"></div><span class="op">+</span><div class="die w" id="d2"></div><span class="op">=</span><div class="sum" id="sum">?</div>
     </div>
-    <button class="btn go only-race" id="roll">🎲 Lanzar</button>
+    <button class="btn go only-race" id="roll"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="8" cy="8" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>Lanzar</button>
     <button class="btn auto only-race" id="auto">▶ Automático</button>
     <button class="btn go only-mil" id="mil">▶ Lanzar 1.000</button>
     <div class="speed" id="speed">
-      <button data-s="0" aria-pressed="false">🐢</button>
-      <button data-s="1" aria-pressed="true">🐇</button>
-      <button data-s="2" aria-pressed="false">⚡</button>
+      <button data-s="0" aria-pressed="false" aria-label="Lento"><svg viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z"/></svg></button>
+      <button data-s="1" aria-pressed="true" aria-label="Normal"><svg viewBox="0 0 18 12"><path d="M0 0l9 6-9 6zM8 0l10 6-10 6z"/></svg></button>
+      <button data-s="2" aria-pressed="false" aria-label="Rápido"><svg viewBox="0 0 26 12"><path d="M0 0l9 6-9 6zM8 0l9 6-9 6zM16 0l10 6-10 6z"/></svg></button>
     </div>
     <button class="btn" id="new">↺ Nueva carrera</button>
     <div class="count"><span>Lanzamientos</span><b id="nRolls">0</b></div>
@@ -163,7 +196,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 
 <div class="modal" id="winModal" hidden>
   <div class="win">
-    <div class="h">🏆</div>
+    <div class="h" id="winH"></div>
     <div class="t" id="winT"></div>
     <div class="s" id="winS"></div>
     <button class="btn go" id="winOk">¡Otra vez!</button>
@@ -182,14 +215,41 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let mode = 'race', sp = 1, pos = {}, cnt = {}, rolls = 0, bet = null, busy = false, done = false, timer = null, raf = null, wins = {};
+  // caballo dibujado (mirando a la derecha); --c = color del jinete y la manta
+  const horseSVG = n => `<svg class="hz" viewBox="-2 -4 124 100" aria-hidden="true"><g class="bd">
+    <g class="lg lb2"><rect x="30" y="54" width="7" height="30" rx="3.5" fill="#5C3818"/><rect x="29" y="80" width="9" height="6" rx="2" fill="#24160A"/></g>
+    <g class="lg lf2"><rect x="78" y="54" width="7" height="30" rx="3.5" fill="#5C3818"/><rect x="77" y="80" width="9" height="6" rx="2" fill="#24160A"/></g>
+    <path class="tl" d="M28 42 C12 40 4 54 3 72 C12 64 18 56 28 52 Z" fill="#3A2312"/>
+    <ellipse cx="57" cy="48" rx="33" ry="16" fill="#9C6534"/>
+    <ellipse cx="57" cy="56" rx="27" ry="6.5" fill="#000" opacity=".13"/>
+    <path d="M74 40 L90 14 L104 20 L92 56 Z" fill="#9C6534"/>
+    <g class="hd"><path d="M88 12 Q99 5 109 15 L118 26 Q120 33 113 33 L99 29 Q90 25 88 12 Z" fill="#9C6534"/>
+      <path d="M92 12 L94 2 L99 10 Z" fill="#7A4B22"/><circle cx="101" cy="16" r="2.1" fill="#1A1208"/><circle cx="114" cy="28" r="1.4" fill="#3A2312"/>
+      <path d="M100 30 Q104 32 110 31" stroke="#5C3818" stroke-width="1.2" fill="none"/></g>
+    <path d="M89 10 Q83 26 72 40 L79 42 Q88 29 95 15 Z" fill="#3A2312"/>
+    <g class="lg lb"><rect x="35" y="54" width="7.5" height="31" rx="3.7" fill="#8A5629"/><rect x="34" y="81" width="9.5" height="6" rx="2" fill="#24160A"/></g>
+    <g class="lg lf"><rect x="83" y="54" width="7.5" height="31" rx="3.7" fill="#8A5629"/><rect x="82" y="81" width="9.5" height="6" rx="2" fill="#24160A"/></g>
+    <rect x="42" y="33" width="28" height="21" rx="4" style="fill:var(--c)" stroke="#fff" stroke-width="2.5"/>
+    <text x="56" y="49.5" text-anchor="middle" font-family="RHD, Arial" font-weight="900" font-size="14" fill="#17204A">${n}</text>
+    <path d="M108 26 L90 22" stroke="#24160A" stroke-width="1.3"/>
+    <path d="M47 32 Q52 13 70 12 L76 19 Q62 22 57 33 Z" style="fill:var(--c)" stroke="rgba(0,0,0,.25)" stroke-width="1.2"/>
+    <path d="M67 18 Q78 25 89 22" style="stroke:var(--c)" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <circle cx="89.5" cy="22" r="2.8" fill="#F2C29B"/>
+    <circle cx="76" cy="10" r="5.6" fill="#F2C29B"/>
+    <path d="M69 9.5 A7.4 7.4 0 0 1 83.5 7.5 L87 8.5 L83 10.5 L69 10.5 Z" style="fill:var(--c)" stroke="rgba(0,0,0,.3)" stroke-width="1"/>
+  </g></svg>`;
+  const CROWN = '<svg viewBox="0 0 24 18"><path d="M2 16 L1 4 L7 9 L12 1 L17 9 L23 4 L22 16 Z" fill="#FFD233" stroke="#B8860B" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="11" r="2" fill="#FF5A5F"/></svg>';
+  const goT = {};
+  $('brandH').innerHTML = horseSVG(''); $('brandH').style.setProperty('--c', '#FFD233'); $('brandH').classList.add('gal');
   const r6 = () => { const a = new Uint8Array(1); do crypto.getRandomValues(a); while (a[0] >= 252); return a[0] % 6 + 1; };
 
   // ---------- pista ----------
   SUMS.forEach(s => {
     const l = document.createElement('div'); l.className = 'lane'; l.id = 'l' + s; l.style.setProperty('--c', COL[s]);
+    l.style.setProperty('--d', (-s * .37) + 's');
     l.innerHTML = `<div class="run"><div class="finish"></div><div class="fill" id="f${s}"></div>
-      <div class="horse" id="h${s}"><span class="crown">👑</span><span class="cnt" id="c${s}">0</span>🏇</div></div>
-      <button class="badge" id="b${s}" aria-label="Caballo ${s}">${s}<span class="w" id="w${s}"></span></button>`;
+      <div class="horse" id="h${s}"><div class="dust"><i></i><i></i><i></i></div><span class="crown">${CROWN}</span><span class="cnt" id="c${s}">0</span>${horseSVG(s)}</div></div>
+      <button class="badge" id="b${s}" aria-label="Caballo ${s}">${s}</button>`;
     $('lanes').append(l);
     l.querySelector('.badge').addEventListener('click', () => {
       if (busy || timer || raf) return;
@@ -212,15 +272,14 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
       $('f' + s).style.height = (v ? b + 4 : 0) + '%';
       $('c' + s).textContent = mode === 'mil' && rolls ? `${v} · ${Math.round(100 * v / rolls)}%` : v;
       $('l' + s).classList.toggle('leader', max > 0 && v === max);
-      $('w' + s).textContent = wins[s] ? '🏆' + wins[s] : '';
     });
     $('nRolls').textContent = mode === 'mil' ? `${fmt(rolls)}` : rolls;
     const top = [...SUMS].sort((a, b) => vals[b] - vals[a] || a - b).slice(0, 3);
-    $('podium').innerHTML = max ? top.filter(s => vals[s] > 0).map((s, i) => `<li><span>${['🥇','🥈','🥉'][i]}</span><span class="chip" style="--c:${COL[s]}">${s}</span></li>`).join('') : '<li>—</li>';
+    $('podium').innerHTML = max ? top.filter(s => vals[s] > 0).map((s, i) => `<li><span class="chip" data-r="${i + 1}º" style="--c:${COL[s]};--m:${['#FFD233','#E3E8F0','#F0A869'][i]}">${s}</span></li>`).join('') : '<li>—</li>';
   }
 
   function reset() {
-    clearTimeout(timer); timer = null; cancelAnimationFrame(raf); raf = null;
+    clearTimeout(timer); timer = null; cancelAnimationFrame(raf); raf = null; $('app').classList.remove('running');
     busy = false; done = false; rolls = 0;
     SUMS.forEach(s => { pos[s] = 0; cnt[s] = 0; });
     $('sum').textContent = '?'; setDie($('d1'), 1); setDie($('d2'), 1);
@@ -237,7 +296,8 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     setDie($('d1'), a); setDie($('d2'), b);
     const el = $('sum'); el.textContent = s; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
     rolls++; pos[s]++; cnt[s]++;
-    const l = $('l' + s); l.classList.remove('hit'); void l.offsetWidth; l.classList.add('hit');
+    const l = $('l' + s); l.classList.remove('hit'); void l.offsetWidth; l.classList.add('hit', 'go');
+    clearTimeout(goT[s]); goT[s] = setTimeout(() => l.classList.remove('go'), 650);
     if (animate) clop();
     draw();
     if (pos[s] >= META) finishRace(s);
@@ -263,18 +323,18 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     ['roll', 'auto'].forEach(id => $(id).disabled = true);
     wins[s] = (wins[s] || 0) + 1; draw(); fanfare();
     setTimeout(() => {
-      $('winT').textContent = `¡Ganó el ${s}!`;
-      $('winS').textContent = (bet ? (bet === s ? '⭐ ¡Acertaste!  ·  ' : `Tu caballo: ${bet}  ·  `) : '') + `${rolls} lanzamientos`;
+      showWinHorse(s); $('winT').textContent = `¡Ganó el ${s}!`;
+      $('winS').textContent = (bet ? (bet === s ? '¡Acertaste!  ·  ' : `Tu caballo: ${bet}  ·  `) : '') + `${rolls} lanzamientos`;
       $('winModal').hidden = false; confetti();
     }, 450);
   }
 
   // ---------- 1.000 lanzamientos ----------
   function runMil() {
-    if (raf) { cancelAnimationFrame(raf); raf = null; $('mil').textContent = '▶ Seguir'; return; }
+    if (raf) { cancelAnimationFrame(raf); raf = null; $('app').classList.remove('running'); $('mil').textContent = '▶ Seguir'; return; }
     if (rolls >= TOTAL) reset();
     initAudio();
-    $('mil').textContent = '⏸ Pausar';
+    $('mil').textContent = '⏸ Pausar'; $('app').classList.add('running');
     const dur = SPEED.mil[sp]; let last = performance.now(), acc = 0;
     (function tick(now) {
       acc += (now - last) * TOTAL / dur; last = now;
@@ -283,16 +343,18 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
       setDie($('d1'), a); setDie($('d2'), b); $('sum').textContent = a + b;
       draw();
       if (rolls < TOTAL) { raf = requestAnimationFrame(tick); return; }
-      raf = null; $('mil').textContent = '▶ Lanzar 1.000';
+      raf = null; $('app').classList.remove('running'); $('mil').textContent = '▶ Lanzar 1.000';
       const max = Math.max(...SUMS.map(s => cnt[s])), top = SUMS.find(s => cnt[s] === max);
       fanfare();
       setTimeout(() => {
-        $('winT').textContent = `¡El ${top} salió más!`;
+        showWinHorse(top); $('winT').textContent = `¡El ${top} salió más!`;
         $('winS').textContent = `${fmt(max)} de 1.000 veces  ·  ${Math.round(max / 10)}%`;
         $('winModal').hidden = false; confetti();
       }, 350);
     })(last);
   }
+
+  function showWinHorse(s) { const h = $('winH'); h.innerHTML = horseSVG(s); h.style.setProperty('--c', COL[s]); h.classList.add('gal'); }
 
   // ---------- eventos ----------
   $('roll').addEventListener('click', () => { if (timer) stopAuto(); roll(); });

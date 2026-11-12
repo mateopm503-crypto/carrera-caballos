@@ -69,8 +69,15 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .podium .chip { width: 1.8em; height: 1.8em; border-radius: 50%; display: grid; place-items: center; background: var(--c, #ddd); color: var(--ink); border: 3px solid var(--m); font-weight: 900; position: relative; }
 .podium .chip::after { content: attr(data-r); position: absolute; right: -.45em; bottom: -.3em; background: var(--m); color: var(--ink); border-radius: 99px; font-size: .5em; padding: .05em .35em; }
 .podium li:first-child .chip { width: 2.1em; height: 2.1em; }
+.many { background: #EEF3FF; border-radius: 16px; padding: min(2cqi, 1vh) 2.4cqi min(2.4cqi, 1.1vh); text-align: center; }
+.many > span { display: block; font-size: min(5cqi, 2.3vh); color: #6B7AB0; margin-bottom: min(1.6cqi, .7vh); }
+.mrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4cqi; }
+.mrow button { background: #fff; border-radius: 12px; padding: .25em 0; font-size: min(8cqi, 3.6vh); font-weight: 900; color: var(--sky); box-shadow: 0 4px 0 #C5D1F2; transition: transform .08s, box-shadow .08s; }
+.mrow button:active { transform: translateY(3px); box-shadow: 0 1px 0 #C5D1F2; }
+.mrow button[aria-pressed="true"] { background: var(--sky); color: #fff; box-shadow: 0 4px 0 var(--sky2); }
+.tabs[hidden] { display: none; }
 .only-mil { display: none; }
-.mil .only-mil { display: grid; } .mil .only-race { display: none; }
+.mil .only-mil { display: block; } .mil .only-race { display: none; }
 
 /* ---------- pista ---------- */
 .track { position: relative; border-radius: 26px; padding: clamp(10px, 1.6vh, 18px) clamp(8px, 1vw, 16px) clamp(8px, 1.2vh, 14px);
@@ -167,7 +174,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
   <header class="top">
     <div class="brand"><span id="brandH"></span> Carrera de <span>caballos</span></div>
     <div class="podium"><b>VA GANANDO</b><ol id="podium"></ol></div>
-    <div class="tabs" id="tabs">
+    <div class="tabs" id="tabs" hidden>
       <button data-m="race" aria-pressed="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 2v20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M5 3h16v11H5z" fill="currentColor" opacity=".25"/><path d="M5 3h4v4H5zM13 3h4v4h-4zM9 7h4v3.5H9zM17 7h4v3.5h-4zM5 10.5h4V14H5zM13 10.5h4V14h-4z" fill="currentColor"/></svg>Carrera</button>
       <button data-m="mil" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="8" cy="8" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>1.000 lanzamientos</button>
     </div>
@@ -179,7 +186,11 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     </div>
     <button class="btn go only-race" id="roll"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="8" cy="8" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>Lanzar</button>
     <button class="btn auto only-race" id="auto">▶ Automático</button>
-    <button class="btn go only-mil" id="mil">▶ Lanzar 1.000</button>
+    <button class="btn go only-mil" id="mil">⏸ Pausar</button>
+    <button class="btn auto only-mil" id="back"><svg class="ic" viewBox="0 0 24 24"><path d="M4 2v20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M5 3h4v4H5zM13 3h4v4h-4zM9 7h4v3.5H9zM17 7h4v3.5h-4zM5 10.5h4V14H5zM13 10.5h4V14h-4z" fill="currentColor"/></svg>Volver a la carrera</button>
+    <div class="many"><span>Lanzar muchas veces</span>
+      <div class="mrow" id="many"><button data-n="25" aria-pressed="false">25</button><button data-n="100" aria-pressed="false">100</button><button data-n="1000" aria-pressed="false">1.000</button></div>
+    </div>
     <div class="speed" id="speed">
       <button data-s="0" aria-pressed="false" aria-label="Lento"><svg viewBox="0 0 10 12"><path d="M0 0l10 6-10 6z"/></svg></button>
       <button data-s="1" aria-pressed="true" aria-label="Normal"><svg viewBox="0 0 18 12"><path d="M0 0l9 6-9 6zM8 0l10 6-10 6z"/></svg></button>
@@ -207,7 +218,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 <script>
 (() => {
   const $ = id => document.getElementById(id);
-  const META = 10, TOTAL = 1000;
+  const META = 10; let total = 1000;
   const SUMS = [1,2,3,4,5,6,7,8,9,10,11,12];
   const COL = { 1:'#E8E3D3', 2:'#FF5A5F', 3:'#FF8C42', 4:'#FFC93C', 5:'#9BE15D', 6:'#2ED3A0', 7:'#36D6E7', 8:'#4DA3FF', 9:'#8E8CFF', 10:'#C77DFF', 11:'#FF7AC6', 12:'#FFA8A8' };
   const PIPS = { 1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8] };
@@ -284,7 +295,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     SUMS.forEach(s => { pos[s] = 0; cnt[s] = 0; });
     $('sum').textContent = '?'; setDie($('d1'), 1); setDie($('d2'), 1);
     $('auto').textContent = '▶ Automático'; $('auto').classList.remove('on');
-    $('mil').textContent = '▶ Lanzar 1.000';
+    $('mil').textContent = '▶ Lanzar ' + fmt(total);
     ['roll', 'auto', 'mil'].forEach(id => $(id).disabled = false);
     $('new').textContent = mode === 'race' ? '↺ Nueva carrera' : '↺ Empezar de nuevo';
     draw();
@@ -332,23 +343,23 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
   // ---------- 1.000 lanzamientos ----------
   function runMil() {
     if (raf) { cancelAnimationFrame(raf); raf = null; $('app').classList.remove('running'); $('mil').textContent = '▶ Seguir'; return; }
-    if (rolls >= TOTAL) reset();
+    if (rolls >= total) reset();
     initAudio();
     $('mil').textContent = '⏸ Pausar'; $('app').classList.add('running');
-    const dur = SPEED.mil[sp]; let last = performance.now(), acc = 0;
+    const dur = SPEED.mil[sp] * Math.sqrt(total / 1000); let last = performance.now(), acc = 0;
     (function tick(now) {
-      acc += (now - last) * TOTAL / dur; last = now;
+      acc += (now - last) * total / dur; last = now;
       let k = Math.floor(acc); acc -= k; let a = 1, b = 1;
-      while (k-- > 0 && rolls < TOTAL) { a = r6(); b = r6(); const s = a + b; cnt[s]++; rolls++; }
+      while (k-- > 0 && rolls < total) { a = r6(); b = r6(); const s = a + b; cnt[s]++; rolls++; }
       setDie($('d1'), a); setDie($('d2'), b); $('sum').textContent = a + b;
       draw();
-      if (rolls < TOTAL) { raf = requestAnimationFrame(tick); return; }
-      raf = null; $('app').classList.remove('running'); $('mil').textContent = '▶ Lanzar 1.000';
+      if (rolls < total) { raf = requestAnimationFrame(tick); return; }
+      raf = null; $('app').classList.remove('running'); $('mil').textContent = '↻ Otra vez';
       const max = Math.max(...SUMS.map(s => cnt[s])), top = SUMS.find(s => cnt[s] === max);
       fanfare();
       setTimeout(() => {
         showWinHorse(top); $('winT').textContent = `¡El ${top} salió más!`;
-        $('winS').textContent = `${fmt(max)} de 1.000 veces  ·  ${Math.round(max / 10)}%`;
+        $('winS').textContent = `${fmt(max)} de ${fmt(total)} veces  ·  ${Math.round(100 * max / total)}%`;
         $('winModal').hidden = false; confetti();
       }, 350);
     })(last);
@@ -370,10 +381,17 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     const b = e.target.closest('button'); if (!b) return;
     sp = +b.dataset.s; $('speed').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
   });
-  $('tabs').addEventListener('click', e => {
-    const b = e.target.closest('button'); if (!b || b.dataset.m === mode) return;
-    mode = b.dataset.m; $('tabs').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-    $('app').classList.toggle('mil', mode === 'mil'); reset();
+  $('many').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (timer) stopAuto();
+    total = +b.dataset.n; mode = 'mil'; $('app').classList.add('mil');
+    $('many').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    reset(); runMil();
+  });
+  $('back').addEventListener('click', () => {
+    mode = 'race'; $('app').classList.remove('mil');
+    $('many').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false'));
+    reset();
   });
   const closeWin = () => { $('winModal').hidden = true; if (mode === 'race') reset(); };
   $('winOk').addEventListener('click', closeWin);

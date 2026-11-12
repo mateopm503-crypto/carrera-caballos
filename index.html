@@ -59,16 +59,20 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 .speed button[aria-pressed="false"] { opacity: .5; }
 .speed svg { height: .8em; width: auto; display: block; margin: auto; fill: currentColor; }
 .speed button[aria-pressed="true"] { background: var(--sky); color: #fff; box-shadow: 0 3px 0 var(--sky2); }
-.count { display: flex; align-items: center; justify-content: space-between; background: var(--ink); color: #fff; border-radius: 16px; padding: min(2.5cqi, 1.2vh) 5cqi; }
-.count span { font-size: clamp(13px, 4.8cqi, 18px); color: #AEB9E8; }
-.count b { font-size: min(11cqi, 5vh); color: var(--yel); font-variant-numeric: tabular-nums; }
-.podium { display: flex; align-items: center; gap: .5em; background: rgba(0,0,0,.25); border-radius: 99px; padding: 5px 16px 5px 18px; color: #fff; font-size: clamp(14px, 1.5vw, 22px); }
-.podium > b { color: var(--yel); letter-spacing: .04em; white-space: nowrap; }
-.podium ol { list-style: none; padding: 0; display: flex; gap: .5em; }
-.podium li { display: flex; align-items: center; gap: .2em; animation: pop .35s cubic-bezier(.2,1.8,.4,1); }
-.podium .chip { width: 1.8em; height: 1.8em; border-radius: 50%; display: grid; place-items: center; background: var(--c, #ddd); color: var(--ink); border: 3px solid var(--m); font-weight: 900; position: relative; }
-.podium .chip::after { content: attr(data-r); position: absolute; right: -.45em; bottom: -.3em; background: var(--m); color: var(--ink); border-radius: 99px; font-size: .5em; padding: .05em .35em; }
-.podium li:first-child .chip { width: 2.1em; height: 2.1em; }
+.vg { background: var(--ink); color: #fff; border-radius: 20px; padding: min(3cqi, 1.3vh) 4.5cqi min(3.4cqi, 1.5vh); }
+.vg .lh { display: flex; justify-content: space-between; align-items: baseline; gap: 2cqi; }
+.vg .lh b { color: var(--yel); letter-spacing: .04em; font-size: min(7cqi, 3.2vh); white-space: nowrap; }
+.vg .lh span { color: #AEB9E8; font-size: min(4.2cqi, 1.9vh); white-space: nowrap; }
+.vg .lh em { font-style: normal; color: #fff; font-size: 1.35em; font-variant-numeric: tabular-nums; }
+.vg ol { list-style: none; padding: 0; display: flex; justify-content: center; align-items: flex-end; gap: 6cqi; margin-top: min(3cqi, 1.3vh); height: min(32cqi, 14vh); }
+.vg li { animation: pop .35s cubic-bezier(.2,1.8,.4,1); }
+.vg li:nth-child(1) { order: 2; } .vg li:nth-child(2) { order: 1; } .vg li:nth-child(3) { order: 3; }
+.vg .chip { width: min(21cqi, 9.4vh); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--ink);
+  border: min(1.4cqi, 5px) solid var(--m); font-weight: 900; font-size: min(10cqi, 4.4vh); position: relative; box-shadow: 0 4px 0 rgba(0,0,0,.35); }
+.vg li:nth-child(1) .chip { width: min(29cqi, 13vh); font-size: min(14cqi, 6.2vh); }
+.vg .chip::after { content: attr(data-r); position: absolute; left: 50%; bottom: -.55em; transform: translateX(-50%); background: var(--m); color: var(--ink);
+  border-radius: 99px; font-size: .42em; padding: .02em .45em; }
+.vg .wait { align-self: center; color: #AEB9E8; font-size: min(6cqi, 2.7vh); animation: none; }
 .many { background: #EEF3FF; border-radius: 16px; padding: min(2cqi, 1vh) 2.4cqi min(2.4cqi, 1.1vh); text-align: center; }
 .many > span { display: block; font-size: min(5cqi, 2.3vh); color: #6B7AB0; margin-bottom: min(1.6cqi, .7vh); }
 .mrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.4cqi; }
@@ -164,7 +168,6 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 @media (max-height: 520px) and (orientation: landscape) {
   .top { display: none; }
   .app { grid-template-rows: 1fr; }
-  .podium { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .hz *, .dust i, .crown { animation: none !important; } .horse, .fill { transition: none; } .die.shake, .win, .sum.pop { animation: none; } }
 </style>
@@ -173,7 +176,6 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
 <div class="app" id="app">
   <header class="top">
     <div class="brand"><span id="brandH"></span> Carrera de <span>caballos</span></div>
-    <div class="podium"><b>VA GANANDO</b><ol id="podium"></ol></div>
     <div class="tabs" id="tabs" hidden>
       <button data-m="race" aria-pressed="true"><svg class="ic" viewBox="0 0 24 24"><path d="M4 2v20" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M5 3h16v11H5z" fill="currentColor" opacity=".25"/><path d="M5 3h4v4H5zM13 3h4v4h-4zM9 7h4v3.5H9zM17 7h4v3.5h-4zM5 10.5h4V14H5zM13 10.5h4V14h-4z" fill="currentColor"/></svg>Carrera</button>
       <button data-m="mil" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24"><rect x="2.5" y="2.5" width="19" height="19" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"/><circle cx="8" cy="8" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>1.000 lanzamientos</button>
@@ -197,7 +199,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
       <button data-s="2" aria-pressed="false" aria-label="Rápido"><svg viewBox="0 0 26 12"><path d="M0 0l9 6-9 6zM8 0l9 6-9 6zM16 0l10 6-10 6z"/></svg></button>
     </div>
     <button class="btn" id="new">↺ Nueva carrera</button>
-    <div class="count"><span>Lanzamientos</span><b id="nRolls">0</b></div>
+    <div class="vg"><div class="lh"><b>VA GANANDO</b><span>Lanzamientos <em id="nRolls">0</em></span></div><ol id="podium"></ol></div>
   </aside>
 
   <main class="track" aria-label="Pista">
@@ -286,7 +288,7 @@ button[disabled] { opacity: .4; cursor: default; filter: grayscale(.5); }
     });
     $('nRolls').textContent = mode === 'mil' ? `${fmt(rolls)}` : rolls;
     const top = [...SUMS].sort((a, b) => vals[b] - vals[a] || a - b).slice(0, 3);
-    $('podium').innerHTML = max ? top.filter(s => vals[s] > 0).map((s, i) => `<li><span class="chip" data-r="${i + 1}º" style="--c:${COL[s]};--m:${['#FFD233','#E3E8F0','#F0A869'][i]}">${s}</span></li>`).join('') : '<li>—</li>';
+    $('podium').innerHTML = max ? top.filter(s => vals[s] > 0).map((s, i) => `<li><span class="chip" data-r="${i + 1}º" style="--c:${COL[s]};--m:${['#FFD233','#E3E8F0','#F0A869'][i]}">${s}</span></li>`).join('') : '<li class="wait">¡A lanzar los dados!</li>';
   }
 
   function reset() {
